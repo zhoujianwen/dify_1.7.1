@@ -136,6 +136,19 @@ const ChatWrapper = () => {
       parent_message_id: (isRegenerate ? parentAnswer?.id : getLastAnswer(chatList)?.id) || null,
     }
 
+    window.parent?.postMessage(
+      {
+        type: 'dify-chatbot-user-send',
+        payload: {
+          query: message,
+          files,
+          conversationId: currentConversationId,
+          inputs: currentConversationId ? currentConversationInputs : newConversationInputs,
+        },
+      },
+      '*',
+    )
+
     handleSend(
       getUrl('chat-messages', isInstalledApp, appId || ''),
       data,
