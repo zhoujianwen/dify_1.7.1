@@ -349,6 +349,13 @@ export const useEmbeddedChatbot = () => {
   const handleStartChat = useCallback((callback?: any) => {
     if (checkInputsRequired()) {
       setShowNewConversationItemInList(true)
+      window.parent?.postMessage(
+        {
+          type: 'dify-chatbot-form-submit',
+          payload: { inputs: newConversationInputsRef.current },
+        },
+        '*',
+      )
       callback?.()
     }
   }, [setShowNewConversationItemInList, checkInputsRequired])
