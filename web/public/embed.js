@@ -214,21 +214,28 @@
       const targetIframe = document.getElementById(iframeId);
       if (!targetIframe || event.source !== targetIframe.contentWindow) return;
 
-      if (event.data.type === 'dify-chatbot-iframe-ready') {
-        targetIframe.contentWindow?.postMessage(
-          {
-            type: 'dify-chatbot-config',
-            payload: {
-              isToggledByButton: true,
-              isDraggable: !!config.draggable,
+      switch (event.data.type) {
+        case 'dify-chatbot-iframe-ready':
+          targetIframe.contentWindow?.postMessage(
+            {
+              type: 'dify-chatbot-config',
+              payload: {
+                isToggledByButton: true,
+                isDraggable: !!config.draggable,
+              },
             },
-          },
-          targetOrigin
-        );
-      }
-
-      if (event.data.type === 'dify-chatbot-expand-change') {
-        toggleExpand();
+            targetOrigin
+          );
+          break;
+        case 'dify-chatbot-expand-change':
+          toggleExpand();
+          break;
+        case 'dify-chatbot-user-send':
+        case 'dify-chatbot-form-submit':
+          window.difyChatbotConfig.onEvent?.(event.data);
+          break;
+        default:
+          break;
       }
     });
 
