@@ -356,6 +356,19 @@ export const useChat = (
           if (onConversationComplete)
             onConversationComplete(conversationId.current)
 
+          window.parent?.postMessage(
+            {
+              type: 'dify-chatbot-answer',
+              payload: {
+                conversationId: conversationId.current,
+                messageId: responseItem.id,
+                question: questionItem.content,
+                answer: responseItem.content,
+              },
+            },
+            '*',
+          )
+
           if (conversationId.current && !hasStopResponded.current && onGetConversationMessages) {
             const { data }: any = await onGetConversationMessages(
               conversationId.current,
